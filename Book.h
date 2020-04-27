@@ -19,6 +19,7 @@ class Book {
                << "Publisher: " << book.publisher << "\n"
                << "Year of Publish: " << book.year << "\n"
                << "Price: " << book.price;
+            return os;
         }
 };
 #endif
