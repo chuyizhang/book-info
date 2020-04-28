@@ -3,5 +3,6 @@
 #include <iostream>
 void loadDB();
 void loadTable();
+int menu();
 void closeDB();
 #endif

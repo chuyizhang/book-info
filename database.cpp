@@ -9,9 +9,8 @@ void loadDB() {
     exit = sqlite3_open("bookInfo.db", &db);
     if (exit) {
         throw std::runtime_error(sqlite3_errmsg(db));
-    } else {
-        return;
     }
+    return;
 }
 
 void loadTable() {
@@ -26,9 +25,8 @@ void loadTable() {
     exit = sqlite3_exec(db, sql.c_str(), NULL, 0, NULL);
     if (exit) {
         throw std::runtime_error(sqlite3_errmsg(db));
-    } else {
-        return;
     }
+    return;
 }
 
 void closeDB() {
@@ -36,7 +34,6 @@ void closeDB() {
     exit = sqlite3_close(db);
     if (exit) {
         throw std::runtime_error(sqlite3_errmsg(db));
-    } else {
-        return;
     }
+    return;
 }

@@ -1,6 +1,7 @@
 #include "main.h"
 
 int main(int argc, char const *argv[]) {
+    //load database and table
     try {
         loadDB();
         loadTable();
@@ -10,6 +11,15 @@ int main(int argc, char const *argv[]) {
         return -1;
     }
 
+    //print welcome info
+    puts("============ Book Information Management System ============");
+
+    //main loop
+    while (!menu()) {
+        ;
+    }
+    
+    //close database
     try {
         closeDB();
     }
