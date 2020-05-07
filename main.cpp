@@ -15,9 +15,7 @@ int main(int argc, char const *argv[]) {
     puts("============ Book Information Management System ============");
 
     //main loop
-    while (!menu()) {
-        ;
-    }
+    while (menu() != QUIT_SYSTEM);
     
     //close database
     try {

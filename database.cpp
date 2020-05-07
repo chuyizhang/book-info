@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <sqlite3.h>
+#include "Book.h"
 
 static sqlite3 *db;
 

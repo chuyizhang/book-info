@@ -81,7 +81,7 @@ int add_book() {
             std::cin.ignore(1000, '\n');
         }
         if (s == "Y" || s == "y") {
-            return 1;
+            return TRY_AGAIN;
         } else {
             return -1;
         }

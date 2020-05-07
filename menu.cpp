@@ -16,7 +16,7 @@ int menu() {
         
         break;
     case 2:
-        while (add_book() == 1);
+        while (add_book() == TRY_AGAIN);
         break;
     case 3:
         break;
@@ -39,7 +39,7 @@ int quit() {
         std::cin.ignore(1000, '\n');
     }
     if (s == "Y" || s == "y") {
-        return 1;
+        return QUIT_SYSTEM;
     } else {
         return 0;
     }

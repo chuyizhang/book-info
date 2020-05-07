@@ -15,7 +15,7 @@ class Book {
         }
 };
 
-std::ostream& operator<<(std::ostream &os, const Book &book) {
+inline std::ostream& operator<<(std::ostream &os, const Book &book) {
     std::cout.precision(2);
     os << std::fixed
        << "ISBN: " << book.isbn << "\n"

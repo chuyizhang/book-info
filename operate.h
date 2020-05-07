@@ -5,4 +5,5 @@
 #include <ctime>
 #include <cmath>
 #include "Book.h"
+#define TRY_AGAIN 1
 #endif
