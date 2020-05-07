@@ -2,7 +2,7 @@
 #define BOOK_H
 #include <iostream>
 class Book {
-    friend std::ostream &operator<<(std::ostream &os, const Book &book);
+    friend std::ostream &operator<<(std::ostream&, const Book&);
     private:
         std::string isbn;
         std::string title;
@@ -12,6 +12,24 @@ class Book {
         double price;
     public:
         Book(std::string isbn_str, std::string title_str, std::string author_str, std::string publisher_str, int y, double p): isbn(isbn_str), title(title_str), author(author_str), publisher(publisher_str), year(y), price(p) {
+        }
+        std::string book_isbn() const {
+            return isbn;
+        }
+        std::string book_title() const {
+            return title;
+        }
+        std::string book_author() const {
+            return author;
+        }
+        std::string book_publisher() const {
+            return publisher;
+        }
+        int book_year() const {
+            return year;
+        }
+        double book_price() const {
+            return price;
         }
 };
 
