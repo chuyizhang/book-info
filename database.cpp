@@ -137,3 +137,23 @@ int search(std::string text, std::vector<std::string>& result) {
     std::cout << "Find " << result.size() << " result(s)" << std::endl;
     return 0;
 }
+
+int filter(std::string publisher, std::vector<std::string> conditions) {
+    std::string query;
+    query = "SELECT * FROM book WHERE Publisher LIKE '%" + format(publisher) + "%'";
+    for (std::string condition : conditions) {
+        query += (" AND " + condition);
+    }
+    query += " ORDER BY ISBN ASC;";
+    int exit;
+    char *messageError;
+    std::vector<std::string> result = {};
+    exit = sqlite3_exec(db, query.c_str(), callback, &result, &messageError);
+    if (exit != SQLITE_OK) {
+        std::cout << messageError << std::endl;
+        sqlite3_free(messageError);
+        return -1;
+    }
+    std::cout << "Find " << result.size() << " result(s)" << std::endl;
+    return 0;
+}

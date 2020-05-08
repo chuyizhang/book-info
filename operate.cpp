@@ -175,6 +175,68 @@ int browse_book() {
             } while (text.empty());
             std::vector<std::string> result = {};
             return search(text, result);
+        } else if (choice == 3) {
+            std::string publisher;
+            std::cout << "Please input publisher. Press ENTER for any publisher." <<std::endl << "-->";
+            std::getline(std::cin, publisher);
+            std::vector<std::string> conditions = {};
+            //minimum year
+            std::string min_year_str;
+            std::cout << "Please input minimum year. Press ENTER for no limit." << std::endl << "-->";
+            std::getline(std::cin, min_year_str);
+            if (min_year_str != "") {
+                int min_year;
+                try {
+                    min_year = std::stoi(min_year_str);
+                    conditions.push_back("Year >= " + std::to_string(min_year));
+                }
+                catch(const std::exception& e) {
+                    std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;;
+                }
+            }
+            //maximum year
+            std::string max_year_str;
+            std::cout << "Please input maximum year. Press ENTER for no limit." << std::endl << "-->";
+            std::getline(std::cin, max_year_str);
+            if (max_year_str != "") {
+                int max_year;
+                try {
+                    max_year = std::stod(max_year_str);
+                    conditions.push_back("Year <= " + std::to_string(max_year));
+                }
+                catch(const std::exception& e) {
+                    std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;
+                }
+            }
+            //minimum price
+            std::string min_price_str;
+            std::cout << "Please input minimum price. Press ENTER for no limit." << std::endl << "-->";
+            std::getline(std::cin, min_price_str);
+            if (min_price_str != "") {
+                double min_price;
+                try {
+                    min_price = std::stod(min_price_str);
+                    conditions.push_back("Price >= " + std::to_string(min_price));
+                }
+                catch(const std::exception& e) {
+                    std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;
+                }
+            }
+            //maximum price
+            std::string max_price_str;
+            std::cout << "Please input maximum price. Press ENTER for no limit." << std::endl << "-->";
+            std::getline(std::cin, max_price_str);
+            if (max_price_str != "") {
+                double max_price;
+                try {
+                    max_price = std::stod(max_price_str);
+                    conditions.push_back("Price <= " + std::to_string(max_price));
+                }
+                catch(const std::exception& e) {
+                    std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;
+                }
+            }
+            return filter(publisher, conditions);
         }
     return 0;
 }

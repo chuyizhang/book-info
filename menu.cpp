@@ -30,7 +30,7 @@ int menu() {
 }
 
 int quit() {
-    std::cout << "Quit the system?<y/n>" << std::endl;
+    std::cout << "Quit the system?<y/n>" << std::endl << "-->";
     std::string s;
     std::cin >> s;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
