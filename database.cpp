@@ -119,6 +119,21 @@ int order(int element, int direction) {
         sqlite3_free(messageError);
         return -1;
     }
-    std::cout << "Find " << result.size() << " results" << std::endl;
+    std::cout << "Find " << result.size() << " result(s)" << std::endl;
+    return 0;
+}
+
+int search(std::string text, std::vector<std::string>& result) {
+    std::string query;
+    query = "SELECT * FROM book WHERE ISBN = '" + format(text) + "' OR Title LIKE '%" + format(text) + "%' ORDER BY ISBN ASC;";
+    int exit;
+    char *messageError;
+    exit = sqlite3_exec(db, query.c_str(), callback, &result, &messageError);
+    if (exit != SQLITE_OK) {
+        std::cout << messageError << std::endl;
+        sqlite3_free(messageError);
+        return -1;
+    }
+    std::cout << "Find " << result.size() << " result(s)" << std::endl;
     return 0;
 }

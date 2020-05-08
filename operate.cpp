@@ -168,7 +168,13 @@ int browse_book() {
             }
             return order(element_num - 1, direction_num - 1);
         } else if (choice == 2) {
-
+            std::string text;
+            do {
+                std::cout << "Please input ISBN or book title" << std::endl << "-->";
+                std::getline(std::cin, text);
+            } while (text.empty());
+            std::vector<std::string> result = {};
+            return search(text, result);
         }
     return 0;
 }
