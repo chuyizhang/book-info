@@ -132,7 +132,7 @@ int add_book() {
 }
 
 int browse_book() {
-        std::cout << "Would you like to: <1> Browse all book information <2> Search book by title or ISBN <3> Filter books <4> Go back to main menu?" << std::endl << "-->";
+        std::cout << "Would you like to: <1> Browse all book information <2> Search book <3> Filter books <4> Go back to main menu?" << std::endl << "-->";
         int choice = 0;
         std::cin >> choice;
         std::cin.clear();
@@ -167,6 +167,8 @@ int browse_book() {
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             }
             return order(element_num - 1, direction_num - 1);
+        } else if (choice == 2) {
+
         }
     return 0;
 }

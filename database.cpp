@@ -88,8 +88,6 @@ int delete_record(std::string isbn) {
 }
 
 static int callback(void* data, int argc, char** argv, char** col_name) {
-    int *count = static_cast<int*>(data);
-    (*count)++;
     std::string isbn = std::string(argv[0]);
     std::string title = std::string(argv[1]);
     std::string author = std::string(argv[2]);
@@ -97,7 +95,9 @@ static int callback(void* data, int argc, char** argv, char** col_name) {
     int year = atoi(argv[4]);
     double price = atof(argv[5]);
     Book book = Book(isbn, title, author, publisher, year, price);
-    std::cout << book <<std::endl;
+    std::vector<std::string> *result = static_cast<std::vector<std::string>*>(data);
+    result->push_back(isbn);
+    std::cout << "<" << result->size() << ">" << std::endl << book <<std::endl;
     return 0;
 }
 
@@ -111,14 +111,14 @@ int order(int element, int direction) {
         query = "SELECT * FROM book ORDER BY " + order_elm[element] + " " + order_dir[direction] + ", ISBN ASC;";
     }
     int exit;
-    int count = 0;
+    std::vector<std::string> result = {};
     char *messageError;
-    exit = sqlite3_exec(db, query.c_str(), callback, &count, &messageError);
+    exit = sqlite3_exec(db, query.c_str(), callback, &result, &messageError);
     if (exit != SQLITE_OK) {
         std::cout << messageError << std::endl;
         sqlite3_free(messageError);
         return -1;
     }
-    std::cout << "Find " << count << " results" << std::endl;
+    std::cout << "Find " << result.size() << " results" << std::endl;
     return 0;
 }
