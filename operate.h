@@ -8,4 +8,5 @@
 #define TRY_AGAIN 1
 int insert(Book);
 int delete_record(std::string);
+int order(int, int);
 #endif

@@ -2,7 +2,7 @@
 
 int menu() {
     std::cout << "Would you like to: <1> Search and browse book information <2> Add a new book <3> Edit or delete existing books <4> Quit?" << std::endl << "-->";
-    int choice;
+    int choice = 0;
     std::cin >> choice;
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -14,7 +14,7 @@ int menu() {
     }
     switch (choice) {
     case 1:
-        
+        browse_book();
         break;
     case 2:
         while (add_book() == TRY_AGAIN);

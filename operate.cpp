@@ -17,11 +17,19 @@ int add_book() {
     std::cout << "Please input publisher" << std::endl << "-->";
     std::getline(std::cin, publisher);
     std::cout << "Please input publication year" << std::endl << "-->";
-    std::cin >> year;
+    while (!(std::cin >> year)) {
+        std::cerr << "Please input a number!" << std::endl << "-->";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout << "Please input price" << std::endl << "-->";
-    std::cin >> price;
+    while (!(std::cin >> price)) {
+        std::cerr << "Please input a number!" << std::endl << "-->";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     bool is_isbn_valid, is_year_valid, is_price_valid;
@@ -121,4 +129,40 @@ int add_book() {
             return -1;
         }
     }
+}
+
+int browse_book() {
+        std::cout << "Would you like to: <1> Browse all book information <2> Search book by title or ISBN <3> Filter books <4> Go back to main menu?" << std::endl << "-->";
+        int choice = 0;
+        std::cin >> choice;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        while (choice < 1 || choice > 4) {
+            std::cerr << "Please input a valid choice" << std::endl << "-->";
+            std::cin >> choice;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        if (choice == 1) {
+            std::cout << "Would you like to order books by: <1> ISBN(default) <2> Title <3> Author <4> Publisher <5> Publication year <6> Price?" << std::endl << "-->";
+            int element_num = 0;
+            std::cin >> element_num;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            if (element_num < 1 || element_num > 6) {
+                std::cout << "You did not input a valid choice. Book information will be ordered by ISBN." << std::endl;
+                element_num = 1;
+            }
+            std::cout << "Would you like to order books in: <1> Ascending order(default) <2> Descending order?" << std::endl << "-->";
+            int direction_num = 0;
+            std::cin >> direction_num;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            if (direction_num < 1 || direction_num > 2) {
+                std::cout << "You did not input a valid choice. Book information will be ordered ascendantly." << std::endl;
+                direction_num = 1;
+            }
+            return order(element_num - 1, direction_num - 1);
+        }
+    return 0;
 }

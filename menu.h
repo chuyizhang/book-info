@@ -5,4 +5,5 @@
 #define QUIT_SYSTEM -2
 int quit();
 int add_book();
+int browse_book();
 #endif
