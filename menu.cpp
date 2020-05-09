@@ -20,6 +20,7 @@ int menu() {
         while (add_book() == TRY_AGAIN);
         break;
     case 3:
+        edit_book();
         break;
     case 4:
         return quit();

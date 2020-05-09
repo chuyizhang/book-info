@@ -157,3 +157,18 @@ int filter(std::string publisher, std::vector<std::string> conditions) {
     std::cout << "Find " << result.size() << " result(s)" << std::endl;
     return 0;
 }
+
+int select(std::string isbn) {
+    std::string query;
+    query = "SELECT * FROM book WHERE ISBN = '" + isbn + "';";
+    int exit;
+    char *messageError;
+    std::vector<std::string> result = {};
+    exit = sqlite3_exec(db, query.c_str(), callback, &result, &messageError);
+    if (exit != SQLITE_OK) {
+        std::cout << messageError << std::endl;
+        sqlite3_free(messageError);
+        return -1;
+    }
+    return 0;
+}

@@ -132,111 +132,178 @@ int add_book() {
 }
 
 int browse_book() {
-        std::cout << "Would you like to: <1> Browse all book information <2> Search book <3> Filter books <4> Go back to main menu?" << std::endl << "-->";
-        int choice = 0;
+    std::cout << "Would you like to: <1> Browse all book information <2> Search book <3> Filter books <4> Go back to main menu?" << std::endl << "-->";
+    int choice = 0;
+    std::cin >> choice;
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    while (choice < 1 || choice > 4) {
+        std::cerr << "Please input a valid choice" << std::endl << "-->";
         std::cin >> choice;
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        while (choice < 1 || choice > 4) {
+    }
+    if (choice == 1) {
+        std::cout << "Would you like to order books by: <1> ISBN <2> Title <3> Author <4> Publisher <5> Publication year <6> Price?" << std::endl << "-->";
+        int element_num = 0;
+        std::cin >> element_num;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        while (element_num < 1 || element_num > 6) {
             std::cerr << "Please input a valid choice" << std::endl << "-->";
-            std::cin >> choice;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-        if (choice == 1) {
-            std::cout << "Would you like to order books by: <1> ISBN <2> Title <3> Author <4> Publisher <5> Publication year <6> Price?" << std::endl << "-->";
-            int element_num = 0;
             std::cin >> element_num;
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            while (element_num < 1 || element_num > 6) {
-                std::cerr << "Please input a valid choice" << std::endl << "-->";
-                std::cin >> element_num;
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            }
-            std::cout << "Would you like to order books in: <1> Ascending order <2> Descending order?" << std::endl << "-->";
-            int direction_num = 0;
+        }
+        std::cout << "Would you like to order books in: <1> Ascending order <2> Descending order?" << std::endl << "-->";
+        int direction_num = 0;
+        std::cin >> direction_num;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        while (direction_num < 1 || direction_num > 2) {
+            std::cerr << "Please input a valid choice" << std::endl << "-->";
             std::cin >> direction_num;
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            while (direction_num < 1 || direction_num > 2) {
+        }
+        return order(element_num - 1, direction_num - 1);
+    } else if (choice == 2) {
+        std::string text;
+        do {
+            std::cout << "Please input ISBN or book title" << std::endl << "-->";
+            std::getline(std::cin, text);
+        } while (text.empty());
+        std::vector<std::string> result = {};
+        return search(text, result);
+    } else if (choice == 3) {
+        std::string publisher;
+        std::cout << "Please input publisher. Press ENTER for any publisher." <<std::endl << "-->";
+        std::getline(std::cin, publisher);
+        std::vector<std::string> conditions = {};
+        //minimum year
+        std::string min_year_str;
+        std::cout << "Please input minimum year. Press ENTER for no limit." << std::endl << "-->";
+        std::getline(std::cin, min_year_str);
+        if (min_year_str != "") {
+            int min_year;
+            try {
+                min_year = std::stoi(min_year_str);
+                conditions.push_back("Year >= " + std::to_string(min_year));
+            }
+            catch(const std::exception& e) {
+                std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;;
+            }
+        }
+        //maximum year
+        std::string max_year_str;
+        std::cout << "Please input maximum year. Press ENTER for no limit." << std::endl << "-->";
+        std::getline(std::cin, max_year_str);
+        if (max_year_str != "") {
+            int max_year;
+            try {
+                max_year = std::stod(max_year_str);
+                conditions.push_back("Year <= " + std::to_string(max_year));
+            }
+            catch(const std::exception& e) {
+                std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;
+            }
+        }
+        //minimum price
+        std::string min_price_str;
+        std::cout << "Please input minimum price. Press ENTER for no limit." << std::endl << "-->";
+        std::getline(std::cin, min_price_str);
+        if (min_price_str != "") {
+            double min_price;
+            try {
+                min_price = std::stod(min_price_str);
+                conditions.push_back("Price >= " + std::to_string(min_price));
+            }
+            catch(const std::exception& e) {
+                std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;
+            }
+        }
+        //maximum price
+        std::string max_price_str;
+        std::cout << "Please input maximum price. Press ENTER for no limit." << std::endl << "-->";
+        std::getline(std::cin, max_price_str);
+        if (max_price_str != "") {
+            double max_price;
+            try {
+                max_price = std::stod(max_price_str);
+                conditions.push_back("Price <= " + std::to_string(max_price));
+            }
+            catch(const std::exception& e) {
+                std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;
+            }
+        }
+        return filter(publisher, conditions);
+    }
+    return 0;
+}
+
+int edit_book() {
+    std::string text;
+    do {
+        std::cout << "Please input ISBN or book title" << std::endl << "-->";
+        std::getline(std::cin, text);
+    } while (text.empty());
+    std::vector<std::string> result = {};
+    search(text, result);
+    int selected = 0;
+    if (result.size() == 0) {
+        selected = 0;
+    } else if (result.size() == 1) {
+        selected = 1;
+    } else {
+        std::cout << "Please input a number to select a book to modify. Input 0 to cancel." << std::endl <<"-->";
+        std::cin >> selected;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        while (selected < 0 || selected > result.size()) {
+            std::cerr << "Please input a valid number" << std::endl << "-->";
+            std::cin >> selected;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
+    if (selected) {
+        std::cout << "Would edit following book:" << std::endl;
+        if (!select(result[selected - 1])) {
+            std::cout << "Would you like to: <1> Edit book information <2> Delete book <3> Cancel" << std::endl << "-->";
+            int choice = 0;
+            std::cin >> choice;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            while (choice < 1 || choice > 3) {
                 std::cerr << "Please input a valid choice" << std::endl << "-->";
-                std::cin >> direction_num;
+                std::cin >> choice;
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             }
-            return order(element_num - 1, direction_num - 1);
-        } else if (choice == 2) {
-            std::string text;
-            do {
-                std::cout << "Please input ISBN or book title" << std::endl << "-->";
-                std::getline(std::cin, text);
-            } while (text.empty());
-            std::vector<std::string> result = {};
-            return search(text, result);
-        } else if (choice == 3) {
-            std::string publisher;
-            std::cout << "Please input publisher. Press ENTER for any publisher." <<std::endl << "-->";
-            std::getline(std::cin, publisher);
-            std::vector<std::string> conditions = {};
-            //minimum year
-            std::string min_year_str;
-            std::cout << "Please input minimum year. Press ENTER for no limit." << std::endl << "-->";
-            std::getline(std::cin, min_year_str);
-            if (min_year_str != "") {
-                int min_year;
-                try {
-                    min_year = std::stoi(min_year_str);
-                    conditions.push_back("Year >= " + std::to_string(min_year));
+            if (choice == 1) {
+                std::vector<std::string> changes = {};
+
+
+            } else if (choice == 2) {
+                std::cout << "Would you like to delete the book?<y/n>" << std::endl << "-->";
+                std::string s;
+                std::cin >> s;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                while ((s != "Y") && (s!= "y") && (s!= "N") && (s!= "n")) {
+                    std::cerr << "Please input a valid choice" << std::endl << "-->";
+                    std::cin >> s;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 }
-                catch(const std::exception& e) {
-                    std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;;
+                if (s == "Y" || s == "y") {
+                    int status;
+                    status = delete_record(result[selected - 1]);
+                    if (!status) {
+                        std::cout << "Book successfully deleted." <<std::endl;
+                    }
+                    return status;
                 }
             }
-            //maximum year
-            std::string max_year_str;
-            std::cout << "Please input maximum year. Press ENTER for no limit." << std::endl << "-->";
-            std::getline(std::cin, max_year_str);
-            if (max_year_str != "") {
-                int max_year;
-                try {
-                    max_year = std::stod(max_year_str);
-                    conditions.push_back("Year <= " + std::to_string(max_year));
-                }
-                catch(const std::exception& e) {
-                    std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;
-                }
-            }
-            //minimum price
-            std::string min_price_str;
-            std::cout << "Please input minimum price. Press ENTER for no limit." << std::endl << "-->";
-            std::getline(std::cin, min_price_str);
-            if (min_price_str != "") {
-                double min_price;
-                try {
-                    min_price = std::stod(min_price_str);
-                    conditions.push_back("Price >= " + std::to_string(min_price));
-                }
-                catch(const std::exception& e) {
-                    std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;
-                }
-            }
-            //maximum price
-            std::string max_price_str;
-            std::cout << "Please input maximum price. Press ENTER for no limit." << std::endl << "-->";
-            std::getline(std::cin, max_price_str);
-            if (max_price_str != "") {
-                double max_price;
-                try {
-                    max_price = std::stod(max_price_str);
-                    conditions.push_back("Price <= " + std::to_string(max_price));
-                }
-                catch(const std::exception& e) {
-                    std::cerr << "You did not enter a valid number. The condition is discarded." << std::endl;
-                }
-            }
-            return filter(publisher, conditions);
         }
+    }
     return 0;
 }

@@ -6,4 +6,5 @@
 int quit();
 int add_book();
 int browse_book();
+int edit_book();
 #endif
