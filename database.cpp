@@ -44,7 +44,7 @@ void closeDB() {
     return;
 }
 
-static std::string format(std::string origin) {
+std::string format(std::string origin) {
     std::string result;
     for (auto c : origin) {
         if (c != '\'') {
@@ -169,6 +169,33 @@ int select(std::string isbn) {
         std::cout << messageError << std::endl;
         sqlite3_free(messageError);
         return -1;
+    }
+    return 0;
+}
+
+int update_book(std::string isbn, std::vector<std::string> changes) {
+    std::string query;
+    query = "UPDATE book SET ";
+    for (std::string change : changes) {
+        query += (change + ", ");
+    }
+    query.pop_back();
+    query.pop_back();
+    query += (" WHERE ISBN = '" + isbn + "';");
+    int exit;
+    char *messageError;
+    std::vector<std::string> result = {};
+    exit = sqlite3_exec(db, query.c_str(), callback, &result, &messageError);
+    if (exit != SQLITE_OK) {
+        if (sqlite3_extended_errcode(db) == SQLITE_CONSTRAINT_PRIMARYKEY) {
+            sqlite3_free(messageError);
+            std::cerr << "Failed to update book information. Already have a book with same ISBN." << std::endl;
+            return -1;
+        } else {
+            std::cout << messageError << std::endl;
+            sqlite3_free(messageError);
+            return -1;
+        }
     }
     return 0;
 }

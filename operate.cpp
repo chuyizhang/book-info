@@ -282,8 +282,109 @@ int edit_book() {
             }
             if (choice == 1) {
                 std::vector<std::string> changes = {};
-
-
+                //ISBN
+                std::cout << "Please input new ISBN (10 or 13 digits). Press ENTER to keep original information." << std::endl << "-->";
+                std::string new_isbn;
+                std::getline(std::cin, new_isbn);
+                if (new_isbn != "") {
+                    bool is_isbn_valid;
+                    if (new_isbn.size() == 10 || new_isbn.size() == 13) {
+                        is_isbn_valid = true;
+                        for (auto c : new_isbn) {
+                            if (!isdigit(c)) {
+                                is_isbn_valid = false;
+                            }
+                        }
+                    } else {
+                        is_isbn_valid = false;
+                    }
+                    if (is_isbn_valid) {
+                        changes.push_back("ISBN = '" + new_isbn + "'");
+                    } else {
+                        std::cout << "You did not input a valid ISBN. The change is discarded." << std::endl;
+                    }
+                }
+                //title
+                std::cout << "Please input new title. Press ENTER to keep original information." << std::endl << "-->";
+                std::string new_title;
+                std::getline(std::cin, new_title);
+                if (new_title != "") {
+                    changes.push_back("Title = '" + format(new_title) + "'");
+                }
+                //author
+                std::cout << "Please input new author. Press ENTER to keep original information." << std::endl << "-->";
+                std::string new_author;
+                std::getline(std::cin, new_author);
+                if (new_author != "") {
+                    changes.push_back("Author = '" + format(new_author) + "'");
+                }
+                //publisher
+                std::cout << "Please input new publisher. Press ENTER to keep original information." << std::endl << "-->";
+                std::string new_publisher;
+                std::getline(std::cin, new_publisher);
+                if (new_publisher != "") {
+                    changes.push_back("Publisher = '" + format(new_publisher) + "'");
+                }
+                //year
+                std::cout << "Please input new publication year. Press ENTER to keep original information." << std::endl << "-->";
+                std::string new_year_str;
+                std::getline(std::cin, new_year_str);
+                if (new_year_str != "") {
+                    int new_year;
+                    try {
+                        new_year = std::stoi(new_year_str);
+                        time_t now = time(0);
+                        tm *ltm = localtime(&now);
+                        if (new_year <= 1900 + ltm->tm_year) {
+                            changes.push_back("Year = " + std::to_string(new_year));
+                        } else {
+                            std::cout << "You did not enter a valid year. The change is discarded." << std::endl;
+                        }
+                    }
+                    catch(const std::exception& e) {
+                        std::cout << "You did not enter a valid year. The change is discarded." << std::endl;
+                    }
+                }
+                //price
+                std::cout << "Please input new price. Press ENTER to keep original information." << std::endl << "-->";
+                std::string new_price_str;
+                std::getline(std::cin, new_price_str);
+                if (new_price_str != "") {
+                    double new_price;
+                    try {
+                        new_price = std::stod(new_price_str);
+                        if ((new_price >= 0) && ((100 * new_price) == floor(100 * new_price))) {
+                            changes.push_back("Price = " + std::to_string(new_price));
+                        } else {
+                            std::cout << "You did not enter a valid price. The change is discarded." << std::endl;
+                        }
+                    }
+                    catch(const std::exception& e) {
+                        std::cout << "You did not enter a valid price. The change is discarded." << std::endl;
+                    }
+                }
+                //make change
+                if (changes.size() == 0) {
+                    std::cout << "You did not make any changes." << std::endl;
+                } else  {
+                    std::cout << "Confirm changes?<y/n>" << std::endl << "-->";
+                    std::string s;
+                    std::cin >> s;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    while ((s != "Y") && (s!= "y") && (s!= "N") && (s!= "n")) {
+                        std::cerr << "Please input a valid choice" << std::endl << "-->";
+                        std::cin >> s;
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    }
+                    if (s == "Y" || s == "y") {
+                        int status;
+                        status = update_book(result[selected - 1], changes);
+                        if (!status) {
+                            std::cout << "Book successfully updated." <<std::endl;
+                        }
+                        return status;
+                    }
+                }
             } else if (choice == 2) {
                 std::cout << "Would you like to delete the book?<y/n>" << std::endl << "-->";
                 std::string s;
